@@ -1,0 +1,48 @@
+﻿<Window x:Class="create_sfx.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:create_sfx"
+        mc:Ignorable="d"
+        Title="MainWindow" MaxHeight="500" Width="610" AllowDrop="True" Drop="Window_Drop" WindowStartupLocation="CenterScreen" >
+    <DockPanel>
+        <Border BorderThickness="2" BorderBrush="LightGray" Margin="5" DockPanel.Dock="Top">
+            <StackPanel Margin="5,5,5,5" MinHeight="50">
+                <TextBlock Text="Files that will be archivateted" FontSize="14" HorizontalAlignment="Center"/>
+                <ListView Name="lvFiles" ItemsSource="{Binding}" Background="LightGray" ScrollViewer.CanContentScroll="True" Height="120">
+                    <ListView.View>
+                        <GridView>
+                            <GridViewColumn Header="FileName" Width="auto" DisplayMemberBinding="{Binding}"/>
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </StackPanel>
+        </Border>
+        <Border BorderThickness="2" BorderBrush="LightGray" Margin="5" DockPanel.Dock="Bottom" Height="auto">
+            <StackPanel Margin="5,5,5,5">
+                <StackPanel Margin="5">
+                    <TextBlock Text="What file need to run after unpacking in the frontside?"/>
+                    <ComboBox Name="cmbxExecFileFront" Text="" ItemsSource="{Binding}" Width="auto"/>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <TextBlock Text="What file need to run after unpacking in the backside?"/>
+                    <ComboBox Name="cmbxExecFileBack" Text="" ItemsSource="{Binding}" Width="auto" DropDownClosed="cmbxExecFileBack_DropDownClosed" />
+                </StackPanel>
+                <Button Name="btnFineTune" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" Content="Fine Tuning" IsEnabled="False" Width="75" Click="btnFineTune_Click"/>
+                <StackPanel Margin="5">
+                    <TextBlock Text="Choose new icon for sfx: "/>
+                    <WrapPanel>
+                        <TextBox Name="tbIcon" IsReadOnly="True" Width="502"/>
+                        <Button Name="btnChooseIcon" Margin="5,0,0,0" VerticalAlignment="Center" Content="browse" Width="50" Click="BtnChooseIcon_Click"/>
+                    </WrapPanel>
+                </StackPanel>
+                <StackPanel Margin="5">
+                    <TextBlock Text="Target FileName"/>
+                    <TextBox Name="tbTargetName" Width="502" HorizontalAlignment="Left" Text="wetpussy.exe.jpg" TextChanged="tbTargetName_TextChanged"/>
+                </StackPanel>
+                <Button Name="btnMake" Content="Make sfx" Width="75" Click="btnMake_Click" BorderBrush="Green" Height="37" Margin="246,0"/>
+                </StackPanel>
+        </Border>
+    </DockPanel>
+</Window>

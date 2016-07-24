@@ -1,0 +1,19 @@
+﻿<Window x:Class="create_sfx.SfxConfigWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:create_sfx"
+        mc:Ignorable="d"
+        Title="SfxConfigWindow" Height="404.8" Width="481.6" Activated="Window_Activated"  WindowStartupLocation="CenterOwner" Closed="Window_Closed">
+    <Grid>
+        <StackPanel>
+            <TextBlock Text="SFX module config:" Margin="5"/>
+            <TextBox Name="tbxCFG" Text="{Binding Path=DataContext}" Height="300"  Margin="5" TextWrapping="Wrap" AcceptsReturn="True"/>
+            <WrapPanel HorizontalAlignment="Right">
+                <Button Name="btnHelp" Content="Syntax help"  Margin="5" Click="btnHelp_Click"/>
+                <Button Name="btnOk" Content="Save" Margin="5" BorderBrush="Green"/>
+            </WrapPanel>
+        </StackPanel>
+    </Grid>
+</Window>

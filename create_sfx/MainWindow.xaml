@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:create_sfx"
         mc:Ignorable="d"
-        Title="MainWindow" MaxHeight="500" Width="610" AllowDrop="True" Drop="Window_Drop" WindowStartupLocation="CenterScreen" >
-    <DockPanel>
+        Title="MainWindow" Height="500" Width="610" AllowDrop="True" Drop="Window_Drop" WindowStartupLocation="CenterScreen" Activated="Window_Activated" >
+    <DockPanel Margin="0,0,0.2,37.6">
         <Border BorderThickness="2" BorderBrush="LightGray" Margin="5" DockPanel.Dock="Top">
             <StackPanel Margin="5,5,5,5" MinHeight="50">
                 <TextBlock Text="Files that will be archivateted" FontSize="14" HorizontalAlignment="Center"/>
@@ -19,11 +19,11 @@
                 </ListView>
             </StackPanel>
         </Border>
-        <Border BorderThickness="2" BorderBrush="LightGray" Margin="5" DockPanel.Dock="Bottom" Height="auto">
+        <Border BorderThickness="2" BorderBrush="LightGray" Margin="5,5,5.2,5" DockPanel.Dock="Bottom" Height="280">
             <StackPanel Margin="5,5,5,5">
                 <StackPanel Margin="5">
                     <TextBlock Text="What file need to run after unpacking in the frontside?"/>
-                    <ComboBox Name="cmbxExecFileFront" Text="" ItemsSource="{Binding}" Width="auto"/>
+                    <ComboBox Name="cmbxExecFileFront" Text="" ItemsSource="{Binding}" Width="auto" DropDownClosed="cmbxExecFileFront_DropDownClosed"/>
                 </StackPanel>
                 <StackPanel Margin="5">
                     <TextBlock Text="What file need to run after unpacking in the backside?"/>
@@ -39,10 +39,13 @@
                 </StackPanel>
                 <StackPanel Margin="5">
                     <TextBlock Text="Target FileName"/>
-                    <TextBox Name="tbTargetName" Width="502" HorizontalAlignment="Left" Text="wetpussy.exe.jpg" TextChanged="tbTargetName_TextChanged"/>
+                    <WrapPanel>
+                    <TextBox Name="tbTargetName" Width="502" HorizontalAlignment="Left" Text="wetpussy.jpg.exe" />
+                        <CheckBox Name="chbxReverse" IsChecked="False" Content="Reverse" Checked="chbxReverse_Checked" Unchecked="chbxReverse_Unchecked"/>
+                    </WrapPanel>
                 </StackPanel>
                 <Button Name="btnMake" Content="Make sfx" Width="75" Click="btnMake_Click" BorderBrush="Green" Height="37" Margin="246,0"/>
-                </StackPanel>
+            </StackPanel>
         </Border>
     </DockPanel>
 </Window>

@@ -104,13 +104,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Resources\7z.sfx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <AppDesigner Include="Properties\" />
     <EmbeddedResource Include="Resources\7zSD_RU.chm" />
+    <EmbeddedResource Include="Resources\7z.sfx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -120,6 +120,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\7zx64.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\7zx86.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

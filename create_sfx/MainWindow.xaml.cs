@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
@@ -18,6 +19,11 @@ namespace create_sfx
         List<string> files;        
         string tmpPath = "pack.7z";
         string sfxCfg;
+        string outFileName = "";        
+        string RLO = "\u202e";
+        string LRO = "\u202d";
+
+        SfxConfigWindow sfxWindow;
 
         public MainWindow()
         {
@@ -111,12 +117,13 @@ namespace create_sfx
 
         private void btnMake_Click(object sender, RoutedEventArgs e)
         {            
-            if(lvFiles.Items == null && (cmbxExecFileFront.Text.Length == 0 || cmbxExecFileBack.Text.Length == 0))
+            if(lvFiles.Items == null || cmbxExecFileBack.Text.Length == 0)
             {
                 return;
             }
             CompressByManaged7z(files.ToArray(), tmpPath);
-            CreateSFX(tmpPath, @"\U+202E"+tbTargetName.Text);                              
+            CreateSFX(tmpPath, tbTargetName.Text);
+            Process.Start("explorer.exe", @"/select, " + Path.Combine(Directory.GetCurrentDirectory(), tbTargetName.Text));
         }
 
         private void CompressByManaged7z(string[] srcfiles, string outFile)
@@ -155,17 +162,28 @@ namespace create_sfx
 
         private void CreateSFX(string srcFile, string dstFile)
         {
-            using (Stream OutFileStream = new FileStream(dstFile, FileMode.CreateNew, FileAccess.Write))
+            using (Stream OutFileStream = new FileStream(dstFile, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 CreateFileFromResource("create_sfx.Resources.7z.sfx", "7z.sfx");
+
+                if(tbIcon.Text.Length>0)
+                {
+                    IconChanger.ChangeIcon("7z.sfx", tbIcon.Text);                    
+                }
 
                 byte[] sfxMod = File.ReadAllBytes("7z.sfx");
                 OutFileStream.Write(sfxMod, 0, sfxMod.Length);
                                
                 byte[] sfxConf = Encoding.UTF8.GetBytes(sfxCfg);
+                OutFileStream.Write(sfxConf, 0, sfxConf.Length);
 
-                File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "7z.sfx"));
+                using (Stream arhive7z = File.OpenRead(Path.Combine(Directory.GetCurrentDirectory(), tmpPath)))
+                {
+                    arhive7z.CopyTo(OutFileStream);
+                }                
             }
+            File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "7z.sfx"));
+            File.Delete(Path.Combine(Directory.GetCurrentDirectory(), tmpPath));
         }
 
         private void GenerateSfxCFG()
@@ -174,12 +192,20 @@ namespace create_sfx
 
             sb.Append(";!@Install@!UTF-8!");                    //header
             sb.AppendLine();
-            sb.Append(@"SelfDelete=""1""");                     //archive will be removed after extracting
-            sb.AppendLine();
-            sb.Append(string.Format(@"RunProgram=""{0}""",
+
+            if (cmbxExecFileFront.Text.Length > 0)
+            {
+                sb.Append(string.Format(@"RunProgram=""forcenowait:hidcon:\""{0}\""""",
+                            Path.GetFileName(cmbxExecFileFront.Text)));
+                sb.AppendLine();
+            }
+            sb.Append(string.Format(@"RunProgram=""forcenowait:hidcon:\""{0}\""""",
                         Path.GetFileName(cmbxExecFileBack.Text)));
             sb.AppendLine();
+
             sb.Append(@"GUIMode=""2""");                        //1 - show form, 2 - silentMode, 
+            sb.AppendLine();
+            sb.Append(@"SelfDelete=""1""");                     //archive will be removed after extracting
             sb.AppendLine();
             sb.Append(";!@InstallEnd@!");                       //bottom
             sfxCfg = sb.ToString();           
@@ -238,7 +264,9 @@ namespace create_sfx
                         ext == "py")
                     {
                         cmbxExecFileBack.Items.Add(i);
-                    }else
+                        cmbxExecFileFront.Items.Add(i);
+                    }
+                    else
                     {
                         cmbxExecFileFront.Items.Add(i);
                     }
@@ -257,40 +285,87 @@ namespace create_sfx
         {
             if (cmbxExecFileBack.SelectedItem.ToString() != string.Empty)
             {
-                SfxConfigWindow sfxWindow = new SfxConfigWindow(this);
+                sfxWindow = new SfxConfigWindow("7zSD_RU.chm");
                 sfxWindow.Owner = this;
                 sfxWindow.DataContext = sfxCfg;
                 CreateFileFromResource("create_sfx.Resources.7zSD_RU.chm", "7zSD_RU.chm");
-                sfxWindow.Show();
-                //File.Delete(Path.Combine(Directory.GetCurrentDirectory(), "7zSD_RU.chm"));
+                sfxWindow.Show();                
+            }
+        }
+
+        private void Window_Activated(object sender, EventArgs e)
+        {
+            if(sfxWindow != null)
+            {
+                sfxCfg = sfxWindow.DataContext.ToString();                
+            }
+        }
+
+        private void cmbxExecFileFront_DropDownClosed(object sender, EventArgs e)
+        {
+            if (((ComboBox)sender).SelectedItem == null)
+            {
+                return;
+            }
+            if (((ComboBox)sender).SelectedItem.ToString() != string.Empty)
+            {
+                GenerateSfxCFG();                
             }
         }
 
         private void cmbxExecFileBack_DropDownClosed(object sender, EventArgs e)
         {
-            if(((ComboBox)sender).SelectedItem==null)
+            if (((ComboBox)sender).SelectedItem == null)
             {
                 return;
             }
-            if(((ComboBox)sender).SelectedItem.ToString() != string.Empty)
+            if (((ComboBox)sender).SelectedItem.ToString() != string.Empty)
             {
                 GenerateSfxCFG();
                 btnFineTune.IsEnabled = true;
-            }else
+            }
+            else
             {
                 btnFineTune.IsEnabled = false;
             }
         }
 
-        private void tbTargetName_TextChanged(object sender, TextChangedEventArgs e)
+        private void chbxReverse_Checked(object sender, RoutedEventArgs e)
         {
-            //TextBox tb = (TextBox)sender;
-            //char rleChar = (char)0x202E;
-            //char[] chars = tb.Text.ToCharArray();
-            //if (chars[0] != rleChar)
-            //{
-            //    tb.Text = tb.Text + rleChar;
-            //}
+            if (tbTargetName.Text.Length == 0)
+                return;
+
+            outFileName = "";
+            string[] pth = tbTargetName.Text.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            outFileName += LRO;
+            for (int i=0;i<pth.Length-2;i++)
+            {
+                outFileName += pth[i];
+            }
+            char[] secExt = pth[pth.Length - 2].ToCharArray();
+            Array.Reverse(secExt);
+            outFileName += "." + RLO + Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(secExt)) + "." + pth[pth.Length - 1];
+            tbTargetName.Text = outFileName;
+            tbTargetName.IsEnabled = false;
         }
+
+        private void chbxReverse_Unchecked(object sender, RoutedEventArgs e)
+        {
+            if (tbTargetName.Text.Length == 0)
+                return;
+
+            outFileName = "";
+            string[] pth = tbTargetName.Text.Split(new char[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i < pth.Length - 2; i++)
+            {
+                outFileName += pth[i];
+            }
+            char[] secExt = pth[pth.Length - 2].ToCharArray();
+            Array.Reverse(secExt);
+            outFileName += "." + Encoding.UTF8.GetString(Encoding.UTF8.GetBytes(secExt)) + "." + pth[pth.Length - 1];
+            tbTargetName.Text = outFileName;
+            tbTargetName.IsEnabled = true;
+        }
+
     }
 }

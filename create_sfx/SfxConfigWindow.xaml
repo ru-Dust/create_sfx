@@ -5,14 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:create_sfx"
         mc:Ignorable="d"
-        Title="SfxConfigWindow" Height="404.8" Width="481.6" Activated="Window_Activated"  WindowStartupLocation="CenterOwner" Closed="Window_Closed">
+        Title="SfxConfigWindow" Height="404.8" Width="481.6" Activated="Window_Activated"  WindowStartupLocation="CenterOwner" Closed="Window_Closed" KeyDown="Window_KeyDown">
     <Grid>
         <StackPanel>
             <TextBlock Text="SFX module config:" Margin="5"/>
             <TextBox Name="tbxCFG" Text="{Binding Path=DataContext}" Height="300"  Margin="5" TextWrapping="Wrap" AcceptsReturn="True"/>
             <WrapPanel HorizontalAlignment="Right">
-                <Button Name="btnHelp" Content="Syntax help"  Margin="5" Click="btnHelp_Click"/>
-                <Button Name="btnOk" Content="Save" Margin="5" BorderBrush="Green"/>
+                <Button Name="btnHelp" Width="70" Content="Syntax help"  Margin="5" Click="btnHelp_Click"/>
+                <Button Name="btnOk" Width="70" Content="[Ok]" Margin="5" BorderBrush="Green" Click="btnOk_Click"/>
             </WrapPanel>
         </StackPanel>
     </Grid>

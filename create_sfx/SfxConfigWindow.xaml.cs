@@ -1,17 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Windows.Forms;
 using System.IO;
 using System.Diagnostics;
 
@@ -21,12 +9,13 @@ namespace create_sfx
     /// Логика взаимодействия для SfxConfigWindow.xaml
     /// </summary>
     public partial class SfxConfigWindow : Window
-    {
-        private Window parentWin;
-        public SfxConfigWindow(Window parentWin)
+    {        
+        private string helpFile;
+
+        public SfxConfigWindow(string helpFile)
         {
-            InitializeComponent();
-            this.parentWin = parentWin;
+            InitializeComponent();            
+            this.helpFile = helpFile;
         }
 
         private void Window_Activated(object sender, EventArgs e)
@@ -44,7 +33,29 @@ namespace create_sfx
 
         private void Window_Closed(object sender, EventArgs e)
         {
+            try
+            {
+                File.Delete(System.IO.Path.Combine(Directory.GetCurrentDirectory(), helpFile));
+            }
+            catch(Exception)
+            {
+
+            }            
             this.Owner.Focus();
+        }
+
+        private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == System.Windows.Input.Key.Escape)
+            {
+                this.Close();
+            }
+        }
+
+        private void btnOk_Click(object sender, RoutedEventArgs e)
+        {
+            this.DataContext = tbxCFG.Text;
+            this.Close();
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace create_sfx
 {
-    internal class IconChanger
+    internal static class IconChanger
     {
 
         #region IconReader
@@ -151,18 +151,18 @@ namespace create_sfx
         const uint RT_ICON = 3;
         const uint RT_GROUP_ICON = 14;
 
-        public ICResult ChangeIcon(string exeFilePath, string iconFilePath)
+        public static ICResult ChangeIcon(string exeFilePath, string iconFilePath)
         {
             using (FileStream fs = new FileStream(iconFilePath, FileMode.Open, FileAccess.Read))
             {
                 var reader = new IconReader(fs);
 
-                var iconChanger = new IconChanger();
-                return iconChanger.ChangeIcon(exeFilePath, reader.Icons);
+                
+                return ChangeIcon(exeFilePath, reader.Icons);
             }
         }
 
-        public ICResult ChangeIcon(string exeFilePath, Icons icons)
+        public static ICResult ChangeIcon(string exeFilePath, Icons icons)
         {
             // Load executable
             IntPtr handleExe = BeginUpdateResource(exeFilePath, false);

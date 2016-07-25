@@ -10,7 +10,7 @@
         <Border BorderThickness="2" BorderBrush="LightGray" Margin="5" DockPanel.Dock="Top">
             <StackPanel Margin="5,5,5,5" MinHeight="50">
                 <TextBlock Text="Files that will be archivateted" FontSize="14" HorizontalAlignment="Center"/>
-                <ListView Name="lvFiles" ItemsSource="{Binding}" Background="LightGray" ScrollViewer.CanContentScroll="True" Height="120">
+                <ListView Name="lvFiles" ItemsSource="{Binding}" Background="LightGray" ScrollViewer.CanContentScroll="True" Height="120" KeyUp="lvFiles_KeyUp">
                     <ListView.View>
                         <GridView>
                             <GridViewColumn Header="FileName" Width="auto" DisplayMemberBinding="{Binding}"/>

@@ -367,5 +367,17 @@ namespace create_sfx
             tbTargetName.IsEnabled = true;
         }
 
+        private void lvFiles_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (lvFiles.Items.Count == 0)
+                return;
+
+            if(e.Key == System.Windows.Input.Key.Delete && lvFiles.SelectedIndex != -1)
+            {                
+                files.RemoveAt(lvFiles.SelectedIndex);
+                lvFiles.ItemsSource = null;
+                lvFiles.ItemsSource = files;
+            }
+        }
     }
 }

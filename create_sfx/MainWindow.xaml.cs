@@ -122,7 +122,7 @@ namespace create_sfx
                 return;
             }
             CompressByManaged7z(files.ToArray(), tmpPath);
-            CreateSFX(tmpPath, tbTargetName.Text);
+            CreateSFX(tmpPath, outFileName);
             Process.Start("explorer.exe", @"/select, " + Path.Combine(Directory.GetCurrentDirectory(), tbTargetName.Text));
         }
 

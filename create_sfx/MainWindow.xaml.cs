@@ -77,7 +77,7 @@ namespace create_sfx
                 string fileHash = BitConverter.ToString(sha1.ComputeHash(ba)).Replace("-", string.Empty);
 
                 // The full path of the DLL that will be saved
-                tempFile = Path.GetTempPath() + "System.Data.SQLite.dll";
+                tempFile = Path.GetTempPath() + "SevenZipSharp.dll";
 
                 // Check if the DLL is already existed or not?
                 if (File.Exists(tempFile))
